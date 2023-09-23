@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./Microsoft_Excel-Logo.wine.svg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./style.css">
+    <title>Google Sheet</title>
+</head>
+
+<body>
+
+    <div class="all-data">
+        <div class="upper">
+            <nav class="header">
+                <button>File</button>
+                <button class="home">Home</button>
+                <button>Insert</button>
+                <button>Layout</button>
+                <button>Help</button>
+            </nav>
+
+
+            <section class="tools">
+
+                <div class="helper">
+
+                    <i class="fa-solid fa-copy" style="color: #000000;"></i>
+                    <i class="fa-solid fa-scissors" style="color: #000000;"></i>
+                    <i class="fa-regular fa-paste fa-solid" style="color: #000000;"></i>
+
+                    <select class="font-style">
+                        <option value="Rubik">Rubik</option>
+                        <option value="Poppins">Poppins</option>
+                        <option value="Montserrat">Montserrat</option>
+                        <option value="Work-Sans">Work-Sans</option>
+                        <option value="DM-Sans">DM-Sans</option>
+                    </select>
+
+
+                    <select class="font-size">
+                        <option value="10px">10</option>
+                        <option value="12px">12</option>
+                        <option value="14px">14</option>
+                        <option value="16px">16</option>
+                        <option value="18px">18</option>
+                        <option value="20px">20</option>
+                    </select>
+
+                    <i class="fa-solid fa-bold bold left-icon" style="color: #000000;"></i>
+                    <i class="fa-solid fa-italic italic left-icon" style="color: #000000;"></i>
+                    <i class="fa-solid fa-underline underline left-icon" style="color: #000000;"></i>
+                    <i class="fa-solid fa-align-left left-align left-icon" style="color: #000000;"></i>
+                    <i class="fa-solid fa-align-center center-align left-icon" style="color: #000000;"></i>
+                    <i class="fa-solid fa-align-right right-align left-icon" style="color: #000000;"></i>
+
+                    <div class="text-color">
+                        <img src="./font color.png" class="fa-solid left-icon" width="20px">
+                        <input type="color" id="font-color">
+                    </div>
+
+                    <div class="box-color">
+                        <i class="fa-solid fa-droplet bg-color left-icon" style="color: #000000;"></i>
+                        <input type="color" id="boxBg-color">
+                    </div>
+                    
+                    <i class="fa-regular fa-floppy-disk fa-solid left-icon" style="color: #000000;"></i>
+                    <i class="fa-solid fa-upload fa-solid left-icon" style="color: #000000;"></i>
+
+                </div>
+
+                <div class="filter">
+
+                    <button class="selected-box">A1</button>
+                    <label><img src="./fx.png" class="fa-solid" width="12px"></label>
+                    <input type="text">
+                </div>
+
+            </section>
+
+            <div class="table">
+                <table>
+                    <thead >
+                        <tr class="table-row">
+                            <th class="sno colorSno"></th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+
+
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+
+        <div class="bottom">
+            <footer class="footer">
+                <i class="fa-solid fa-plus add-sheet" style="color: #000000;"></i>
+                <p class="sheets">Sheet 1</p>
+            </footer>
+        </div>
+
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+
+</html>

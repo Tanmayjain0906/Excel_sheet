@@ -72,7 +72,7 @@ for (let i = 1; i <= row; i++) {
 function focusHandler(event) {
     currentCell = event;
     selectedBox.innerText = currentCell.id;
-    // currentCell.style.outline = "1px solid #218C74";
+    currentCell.style.outline = "1px solid #218C74";
 
     if (previousCell) {
         previousCell.style.outline = "none";

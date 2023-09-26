@@ -183,9 +183,9 @@ td {
 .sno {
     min-width: 33px;
     position: sticky;
-    top: 0;
+   
     left: 0;
-    z-index: 100;
+    z-index: 5;
     background-color: #ECF0F1;
 }
 

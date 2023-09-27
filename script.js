@@ -408,7 +408,7 @@ addBtn.addEventListener("click", () => {
 })
 
 function viewSheet(event) {
-    
+
     let tempMatrix = JSON.parse(localStorage.getItem("arrMatrix"));
 
     //update previous matrix
@@ -426,44 +426,45 @@ function viewSheet(event) {
 }
 
 function deleteSheet(event) {
+
     const dltId = Number(event.target.id);
+    let tempMatrix = JSON.parse(localStorage.getItem("arrMatrix"));
+    tempMatrix[currentSheet - 1] = matrix;
+    localStorage.setItem("arrMatrix", JSON.stringify(tempMatrix));
+
     event.target.classList.add("fa-bounce");
     setTimeout((() => {
         event.target.classList.remove("fa-bounce");
 
-        if(sheetContainer.children.length > 1)
-        {
+        if (sheetContainer.children.length > 1) {
             let check = confirm("Your sheet will be removed permanently, Are you sure ?");
 
             if (check) {
                 let tempMatrix = JSON.parse(localStorage.getItem("arrMatrix"));
-                tempMatrix.splice(dltId-1,1);
+                tempMatrix.splice(dltId - 1, 1);
                 localStorage.setItem("arrMatrix", JSON.stringify(tempMatrix));
                 const deletediv = document.getElementsByClassName(event.target.id)[0];
                 deletediv.remove();
-                
-                for(let i=0; i<sheetContainer.children.length; i++)
-                {
+
+                for (let i = 0; i < sheetContainer.children.length; i++) {
                     const getChildren = sheetContainer.children[i];
-                    getChildren.className = `position ${i+1}`;
+                    getChildren.className = `position ${i + 1}`;
 
                     const pChild = getChildren.children[0];
                     const dltChild = getChildren.children[1];
-                    if(i == 0)
-                    {
-                        pChild.innerText = `sheet ${i+1}`
+                    if (i == 0) {
+                        pChild.innerText = `sheet ${i + 1}`
                         pChild.className = "sheets active"
-                        pChild.id = `sheet-${i+1}`
+                        pChild.id = `sheet-${i + 1}`
 
-                        dltChild.id = `${i+1}`;
+                        dltChild.id = `${i + 1}`;
                     }
-                    else
-                    {
-                        pChild.innerText = `sheet ${i+1}`
+                    else {
+                        pChild.innerText = `sheet ${i + 1}`
                         pChild.className = "sheets"
-                        pChild.id = `sheet-${i+1}`
+                        pChild.id = `sheet-${i + 1}`
 
-                        dltChild.id = `${i+1}`;
+                        dltChild.id = `${i + 1}`;
                     }
                 }
                 let newMatrix = JSON.parse(localStorage.getItem("arrMatrix"));
@@ -473,10 +474,9 @@ function deleteSheet(event) {
                 loadMatrixData();
             }
         }
-        else
-        {
+        else {
             alert("You need to have atleast one sheet!!");
-        }   
+        }
     }), 1000)
 
 

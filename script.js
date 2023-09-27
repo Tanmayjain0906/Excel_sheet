@@ -12,6 +12,8 @@ let currentCell;
 let previousCell;
 let cellData;
 let matrix = new Array(row);
+let numSheet = 1;
+let currentSheet = 1;
 
 //font-weight and font style icons
 const boldBtn = document.getElementsByClassName("bold")[0];
@@ -46,28 +48,46 @@ const cutBtn = document.getElementsByClassName("cut")[0];
 const pasteBtn = document.getElementsByClassName("paste")[0];
 
 
-for(let r=0;r<row;r++)
-{
-    matrix[r] = new Array(col);
+//Sheets component
+const addBtn = document.getElementsByClassName("add-sheet")[0];
+const sheetContainer = document.getElementsByClassName("sheets-container")[0];
 
-    for(let c=0;c<col;c++)
-    {
-        matrix[r][c] = {};
+function createMatrix()
+{
+    for (let r = 0; r < row; r++) {
+        matrix[r] = new Array(col);
+    
+        for (let c = 0; c < col; c++) {
+            matrix[r][c] = {};
+        }
     }
 }
+createMatrix();
 
-function createVirtualStorage()
-{
-  let id = currentCell.id; // A1
-  let c = id[0].charCodeAt(0)-65;  // A -> 0;
-  let r = id.substring(1)-1;
+function createVirtualStorage() {
+    let id = currentCell.id; // A1
+    let c = id[0].charCodeAt(0) - 65;  // A -> 0;
+    let r = id.substring(1) - 1;
 
-  matrix[r][c] = {
-    text: currentCell.innerText,
-    style: currentCell.style.cssText,
-    id: id
-  }
-  
+    matrix[r][c] = {
+        text: currentCell.innerText,
+        style: currentCell.style.cssText,
+        id: id
+    }
+
+}
+
+function loadMatrixData() {
+    matrix.forEach((r) => {
+        r.forEach((obj) => {
+            if (obj.id) {
+                const tableCell = document.getElementById(obj.id);
+                tableCell.innerText = obj.text;
+                tableCell.style = obj.style;
+                tableCell.style.outline = "none";
+            }
+        })
+    })
 }
 
 function generateColumns(tableRow, cellType, condition, rowNo) {
@@ -91,16 +111,21 @@ function generateColumns(tableRow, cellType, condition, rowNo) {
 
 generateColumns(tableHead, "th", true)
 
-for (let i = 1; i <= row; i++) {
-    const tr = document.createElement("tr");
-    const th = document.createElement("th");
+function generaterow() {
+    tBody.innerHTML = "";
+    for (let i = 1; i <= row; i++) {
+        const tr = document.createElement("tr");
+        const th = document.createElement("th");
 
-    th.innerText = i;
-    th.className = "sno";
-    tr.appendChild(th);
-    generateColumns(tr, "td", false, i);
-    tBody.appendChild(tr);
+        th.innerText = i;
+        th.className = "sno";
+        tr.appendChild(th);
+        generateColumns(tr, "td", false, i);
+        tBody.appendChild(tr);
+    }
 }
+
+generaterow();
 
 function focusHandler(event) {
     currentCell = event;
@@ -187,7 +212,7 @@ function eventHandler(btnType, styleProperty, ifTypeStyleValue, styleValue) {
         btnType.style.backgroundColor = "rgba(128, 128, 128, 0.342)";
         currentCell.style[styleProperty] = styleValue;
     }
-    
+
     createVirtualStorage();
 }
 
@@ -220,8 +245,8 @@ saveBtn.addEventListener("click", () => {
 
     const matrixStringify = JSON.stringify(matrix);
 
-    const blob = new Blob([matrixStringify], {type: 'application/json'});
-    
+    const blob = new Blob([matrixStringify], { type: 'application/json' });
+
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = `${sheetNo.innerText}.json`;
@@ -242,38 +267,20 @@ uploadBtn.addEventListener("click", () => {
     brouseItem.addEventListener("input", (e) => {
         const file = e.target.files[0];
 
-        if(file)
-        {
+        if (file) {
             const reader = new FileReader();
             reader.readAsText(file);
 
-            reader.onload = function(event){
+            reader.onload = function (event) {
                 const fileContent = JSON.parse(event.target.result);
-                
-                row = fileContent.length;
-                col = fileContent[0].length;
-                
-                for(let r=0;r<row;r++)
-                {
-                    for(let c=0;c<col;c++)
-                    {
-                        const obj = fileContent[r][c];
 
-                        if(obj.text || obj.style)
-                        {
-                            const id = obj.id;
-                            const tableCell = document.getElementById(id);
-                            tableCell.innerText = obj.text;
-                            tableCell.style = obj.style;
-                            tableCell.style.outline = "none";
-                        }
-                    }
-                }
+                matrix = fileContent;
+                loadMatrixData();
             }
         }
     })
 
-     brouseItem.click();
+    brouseItem.click();
 })
 
 
@@ -327,7 +334,7 @@ copyBtn.addEventListener("click", () => {
         text: currentCell.innerText,
         style: currentCell.style.cssText,
         type: "copy"
-    } 
+    }
     createVirtualStorage();
 })
 
@@ -337,11 +344,57 @@ pasteBtn.addEventListener("click", () => {
         pasteBtn.classList.remove("fa-bounce");
     }), 1000)
 
-    currentCell.innerText = cellData.text;
-    currentCell.style = cellData.style;
+    if (cellData.text != "") {
+        currentCell.innerText = cellData.text;
+        currentCell.style = cellData.style;
+    }
+
 
     if (cellData.type === "cut") {
         cellData = undefined;
     }
     createVirtualStorage();
 })
+
+function createNewSheet()
+{
+    numSheet++;
+    currentSheet = numSheet;
+    let div = document.createElement("div");
+    div.className = "position";
+    div.setAttribute("onclick", "viewSheet(event)");
+    div.id = `sheet-${currentSheet}`
+    div.innerHTML = `<p class="sheets">Sheet ${currentSheet}</p>
+    <i class="fa-solid fa-trash" style="color: #313131;"></i>`
+    sheetContainer.appendChild(div);
+}
+
+function saveMatrix()
+{
+    if(localStorage.getItem("arrMatrix"))
+    {
+        let tempMatrix = JSON.parse(localStorage.getItem("arrMatrix"));
+        tempMatrix.push(matrix);
+        localStorage.setItem("arrMatrix", JSON.stringify(tempMatrix));
+    }
+    else
+    {
+        
+        let tempMatrix = [matrix];
+        localStorage.setItem("arrMatrix",JSON.stringify(tempMatrix));
+    }
+}
+
+addBtn.addEventListener("click", () => {
+
+    addBtn.classList.add("fa-bounce");
+    setTimeout((() => {
+        addBtn.classList.remove("fa-bounce");
+    }), 1000)
+
+    createNewSheet();
+    saveMatrix();
+    createMatrix();
+    generaterow();
+})
+

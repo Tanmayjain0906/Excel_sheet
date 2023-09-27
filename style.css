@@ -201,3 +201,23 @@ td {
     transition: 0.2s;
 }
 
+.position
+{
+    position: relative;
+    cursor: pointer;
+}
+
+.sheets-container
+{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.fa-trash
+{
+    position: absolute;
+    margin-top: -35px;
+    transform: scale(1);
+    margin-left: 60px;
+}

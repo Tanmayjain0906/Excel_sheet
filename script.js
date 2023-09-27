@@ -440,11 +440,11 @@ function deleteSheet(event) {
             let check = confirm("Your sheet will be removed permanently, Are you sure ?");
 
             if (check) {
-                let tempMatrix = JSON.parse(localStorage.getItem("arrMatrix"));
                 tempMatrix.splice(dltId - 1, 1);
                 localStorage.setItem("arrMatrix", JSON.stringify(tempMatrix));
                 const deletediv = document.getElementsByClassName(event.target.id)[0];
                 deletediv.remove();
+                numSheet--;
 
                 for (let i = 0; i < sheetContainer.children.length; i++) {
                     const getChildren = sheetContainer.children[i];
@@ -467,8 +467,8 @@ function deleteSheet(event) {
                         dltChild.id = `${i + 1}`;
                     }
                 }
-                let newMatrix = JSON.parse(localStorage.getItem("arrMatrix"));
-                matrix = newMatrix[0];
+                
+                matrix = tempMatrix[0];
                 currentSheet = 1;
                 generaterow();
                 loadMatrixData();

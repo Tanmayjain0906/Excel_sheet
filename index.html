@@ -9,7 +9,7 @@
         integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="./style.css">
-    <title>Google Sheet</title>
+    <title>Excel</title>
 </head>
 
 <body>
@@ -107,9 +107,9 @@
                 <i class="fa-solid fa-plus add-sheet" style="color: #000000;"></i>
                 <div class="sheets-container">
                     
-                    <div class="position" id="sheet-1" onclick="viewSheet(event)">
-                        <p class="sheets">Sheet 1</p>
-                        <i class="fa-solid fa-trash" style="color: #313131;"></i>
+                    <div class="position 1" >
+                        <p class="sheets active" id="sheet-1" onclick="viewSheet(event)">Sheet 1</p>
+                        <i class="fa-solid fa-trash" id="1" onclick="deleteSheet(event)" style="color: #313131;"></i>
                     </div>
 
                     

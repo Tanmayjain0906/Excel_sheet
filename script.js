@@ -52,11 +52,12 @@ const pasteBtn = document.getElementsByClassName("paste")[0];
 const addBtn = document.getElementsByClassName("add-sheet")[0];
 const sheetContainer = document.getElementsByClassName("sheets-container")[0];
 
-function createMatrix()
-{
+localStorage.clear();
+
+function createMatrix() {
     for (let r = 0; r < row; r++) {
         matrix[r] = new Array(col);
-    
+
         for (let c = 0; c < col; c++) {
             matrix[r][c] = {};
         }
@@ -249,7 +250,7 @@ saveBtn.addEventListener("click", () => {
 
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = `${sheetNo.innerText}.json`;
+    link.download = `Sheet ${currentSheet}.json`;
     link.click();
 })
 
@@ -356,32 +357,40 @@ pasteBtn.addEventListener("click", () => {
     createVirtualStorage();
 })
 
-function createNewSheet()
-{
+function sheetBtnHighligher(btnId, type) {
+    if (type === "remove") {
+        const currentSheetElement = document.getElementById(`sheet-${btnId}`);
+        currentSheetElement.classList.remove("active");
+    }
+    else {
+        const currentSheetElement = document.getElementById(`sheet-${btnId}`);
+        currentSheetElement.classList.add("active");
+    }
+}
+
+function createNewSheet() {
     numSheet++;
+
+    sheetBtnHighligher(currentSheet, "remove");
     currentSheet = numSheet;
     let div = document.createElement("div");
-    div.className = "position";
-    div.setAttribute("onclick", "viewSheet(event)");
-    div.id = `sheet-${currentSheet}`
-    div.innerHTML = `<p class="sheets">Sheet ${currentSheet}</p>
-    <i class="fa-solid fa-trash" style="color: #313131;"></i>`
+    div.className = `position ${currentSheet}`;
+
+    div.innerHTML = `<p class="sheets active" id="sheet-${currentSheet}" onclick="viewSheet(event)">Sheet ${currentSheet}</p>
+    <i class="fa-solid fa-trash" id=${currentSheet} onclick="deleteSheet(event)" style="color: #313131;"></i>`
     sheetContainer.appendChild(div);
 }
 
-function saveMatrix()
-{
-    if(localStorage.getItem("arrMatrix"))
-    {
+function saveMatrix() {
+    if (localStorage.getItem("arrMatrix")) {
         let tempMatrix = JSON.parse(localStorage.getItem("arrMatrix"));
         tempMatrix.push(matrix);
         localStorage.setItem("arrMatrix", JSON.stringify(tempMatrix));
     }
-    else
-    {
-        
+    else {
+
         let tempMatrix = [matrix];
-        localStorage.setItem("arrMatrix",JSON.stringify(tempMatrix));
+        localStorage.setItem("arrMatrix", JSON.stringify(tempMatrix));
     }
 }
 
@@ -398,3 +407,77 @@ addBtn.addEventListener("click", () => {
     generaterow();
 })
 
+function viewSheet(event) {
+    
+    let tempMatrix = JSON.parse(localStorage.getItem("arrMatrix"));
+
+    //update previous matrix
+    tempMatrix[currentSheet - 1] = matrix;
+    localStorage.setItem("arrMatrix", JSON.stringify(tempMatrix));
+
+    sheetBtnHighligher(currentSheet, "remove");
+
+    let sheetId = Number((event.target.id).split("-")[1]);
+    currentSheet = sheetId;
+    sheetBtnHighligher(currentSheet, "active");
+    matrix = tempMatrix[sheetId - 1];
+    generaterow();
+    loadMatrixData();
+}
+
+function deleteSheet(event) {
+    const dltId = Number(event.target.id);
+    event.target.classList.add("fa-bounce");
+    setTimeout((() => {
+        event.target.classList.remove("fa-bounce");
+
+        if(sheetContainer.children.length > 1)
+        {
+            let check = confirm("Your sheet will be removed permanently, Are you sure ?");
+
+            if (check) {
+                let tempMatrix = JSON.parse(localStorage.getItem("arrMatrix"));
+                tempMatrix.splice(dltId-1,1);
+                localStorage.setItem("arrMatrix", JSON.stringify(tempMatrix));
+                const deletediv = document.getElementsByClassName(event.target.id)[0];
+                deletediv.remove();
+                
+                for(let i=0; i<sheetContainer.children.length; i++)
+                {
+                    const getChildren = sheetContainer.children[i];
+                    getChildren.className = `position ${i+1}`;
+
+                    const pChild = getChildren.children[0];
+                    const dltChild = getChildren.children[1];
+                    if(i == 0)
+                    {
+                        pChild.innerText = `sheet ${i+1}`
+                        pChild.className = "sheets active"
+                        pChild.id = `sheet-${i+1}`
+
+                        dltChild.id = `${i+1}`;
+                    }
+                    else
+                    {
+                        pChild.innerText = `sheet ${i+1}`
+                        pChild.className = "sheets"
+                        pChild.id = `sheet-${i+1}`
+
+                        dltChild.id = `${i+1}`;
+                    }
+                }
+                let newMatrix = JSON.parse(localStorage.getItem("arrMatrix"));
+                matrix = newMatrix[0];
+                currentSheet = 1;
+                generaterow();
+                loadMatrixData();
+            }
+        }
+        else
+        {
+            alert("You need to have atleast one sheet!!");
+        }   
+    }), 1000)
+
+
+}
